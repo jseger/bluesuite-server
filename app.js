@@ -7,7 +7,10 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // connect to database
-mongoose.connect(process.env.DB_HOST)
+mongoose.connect(process.env.DB_HOST, {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD
+})
 .catch((err) => {
   console.log(err)
 });
