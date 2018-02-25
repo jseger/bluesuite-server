@@ -20,11 +20,12 @@ app.use(bodyParser.json());
 // cors
 app.use((req, res, next) => {
   console.log(req.method.toLowerCase());
-  var allowedOrigins = ['http://localhost:8080', 'https://mybluesuite.azurewebsites.net'];
+/*   var allowedOrigins = ['http://localhost:8080', 'https://mybluesuite.azurewebsites.net'];
   var origin = req.header.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
     res.header('Access-Control-Allow-Origin', origin); 
-  }
+  } */
+  res.header('Access-Control-Allow-Origin', 'https://mybluesuite.azurewebsites.net'); 
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   if (req.method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
