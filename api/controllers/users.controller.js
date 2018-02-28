@@ -216,4 +216,27 @@ exports.my_data = (req, res, next) => {
   .catch(err => {
     res.status(500).json({error: err});
   });
-}
+};
+
+exports.search_by_email = (req, res, next) => {
+  User.findOne({ email: req.params.email})
+  .exec()
+  .then(user => {
+    if(user === null || user === undefined) {
+      res.status(404).json({
+        message: 'Not found'
+      })
+    } else {
+      res.status(200).json({
+        user: {
+          name: user.name,
+          email: user.email,
+          id: user._id
+        }
+      })
+    }
+  })
+  .catch(err => {
+    res.status(500).json({error: err});
+  })
+};

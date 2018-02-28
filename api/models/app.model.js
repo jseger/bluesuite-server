@@ -52,6 +52,26 @@ const appSchema = mongoose.Schema({
         preview: {type: Boolean}
       }]
     }]
+  },
+  workflow: {
+    allowMultipleSubmissions: {type: Boolean, required: true, default: true},
+    allowSaveForm: {type: Boolean, required: true, default: true},
+    states: [{
+      _id: false,
+      name: {type: String, required: true},
+      userAction: {type: Boolean, required: true},
+      actionName: {type: String, required: true},
+      sendNotificationToCollaborators: {type: Boolean, required: true, default: true},
+      requireApproval: {type: Boolean, required: true, default: true},
+      sendAdditionalNotifications: {type: Boolean, required: true, default: true},
+      sendNotificationToSubmitter: {type: Boolean, required: true, default: true},
+      alsoNotify: [{type: String}],
+      approvers: [ {type: String}],
+      minimumApprovals: {type: Number, default: 0},
+      approvedState: {type: String},
+      rejectedState: {type: String},
+      color: {type: String} 
+    }]
   }
 });
 

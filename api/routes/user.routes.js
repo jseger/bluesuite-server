@@ -17,4 +17,6 @@ router.post('/changePassword', checkAuth, UserController.user_change_password);
 
 router.get('/me', checkAuth, UserController.my_data);
 
+router.get('/search/:email', checkAuth, UserController.search_by_email);
+
 module.exports = router;

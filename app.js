@@ -25,6 +25,8 @@ app.use((req, res, next) => {
   console.log(origin)
   if (allowedOrigins.indexOf(origin) > -1) {
     res.header('Access-Control-Allow-Origin', origin); 
+  } else {
+    res.header('Access-Control-Allow-Origin', '*')    
   }
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   if (req.method === 'OPTIONS') {

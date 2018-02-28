@@ -12,7 +12,8 @@ const userSchema = mongoose.Schema({
   password: {type: String, required: true},
   createdAt: {type: Date, default: Date.now, required: true},
   collaborating: [{type: mongoose.Schema.ObjectId, ref: 'App'}],
-  sharedWithMe: [{type: mongoose.Schema.ObjectId, ref: 'App'}]
+  sharedWithMe: [{type: mongoose.Schema.ObjectId, ref: 'App'}],
+  approving: [{type: mongoose.Schema.ObjectId, ref: 'App'}]
 });
 
 module.exports = mongoose.model('User', userSchema);

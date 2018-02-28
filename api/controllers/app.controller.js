@@ -8,6 +8,7 @@ exports.get = (req, res, next) => {
   const appId = req.params.appId;
 
   App.findById(appId)
+  .populate('workflow.states.approvers')
   .exec()
   .then(app => {
     if(app === null || app === undefined) {
@@ -97,6 +98,7 @@ exports.app_update = (req, res, next) => {
   }
   console.log(updateOps);
   App.findOneAndUpdate({_id: id}, { $set: updateOps}, {new: true})
+  .populate('workflow.reviewing.approvers')
   .exec()
   .then(app => {
     if(app) {
