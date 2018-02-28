@@ -8,7 +8,6 @@ exports.get = (req, res, next) => {
   const appId = req.params.appId;
 
   App.findById(appId)
-  .populate('workflow.states.approvers')
   .exec()
   .then(app => {
     if(app === null || app === undefined) {
