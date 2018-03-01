@@ -117,12 +117,12 @@ exports.app_update = (req, res, next) => {
 
 exports.app_create = (req, res, next) => {
   const userId = req.userData.userId;
-  console.log(req.body.form)
   const app = new App({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
     createdBy: userId,
-    form: req.body.form
+    form: req.body.form,
+    workflow: req.body.workflow
   });
   app.collaborators.push(userId);
   app.save()
