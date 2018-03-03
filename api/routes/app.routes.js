@@ -9,6 +9,8 @@ router.post('/share', checkAuth, AppController.share);
 
 router.post('/addCollaborator', checkAuth, AppController.add_collaborator);
 
+router.delete('/:appId/removeCollaborator/:collaboratorId', checkAuth, AppController.remove_collaborator);
+
 router.delete('/:appId', checkAuth, AppController.app_delete);
 
 router.patch('/:appId', checkAuth, AppController.app_update);

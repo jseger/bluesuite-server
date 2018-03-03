@@ -28,7 +28,7 @@ const appSchema = mongoose.Schema({
       labelIcon: {type: String},
       width: {type: String, default: 'xs12 pa-3'},
       calculation: {type: String},
-      preview: {type: String},
+      preview: {type: Boolean},
       horizontal: {type: Boolean},
       tableColumns: [{
         _id: false,

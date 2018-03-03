@@ -214,12 +214,12 @@ exports.my_data = (req, res, next) => {
     });
   })
   .catch(err => {
-    res.status(500).json({error: err});
+    res.status(500).json({status: 500, data: null, message: err.message});
   });
 };
 
 exports.search_by_email = (req, res, next) => {
-  User.findOne({ email: req.params.email})
+  User.findOne({ email: req.body.email})
   .exec()
   .then(user => {
     if(user === null || user === undefined) {
@@ -231,12 +231,12 @@ exports.search_by_email = (req, res, next) => {
         user: {
           name: user.name,
           email: user.email,
-          id: user._id
+          _id: user._id
         }
       })
     }
   })
   .catch(err => {
-    res.status(500).json({error: err});
+    res.status(500).json({status: 500, data: null, message: err.message});
   })
 };
