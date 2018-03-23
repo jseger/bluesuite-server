@@ -3,18 +3,20 @@ const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
 const AppController = require('../controllers/app.controller')
 
-router.post('/create', checkAuth, AppController.app_create);
+router.post('/', checkAuth, AppController.app_create);
 
-router.post('/share', checkAuth, AppController.share);
+router.post('/:appId/addUser', checkAuth, AppController.add_user);
 
-router.post('/addCollaborator', checkAuth, AppController.add_collaborator);
-
-router.delete('/:appId/removeCollaborator/:collaboratorId', checkAuth, AppController.remove_collaborator);
+router.delete('/:appId/removeUser/:userId', checkAuth, AppController.remove_user);
 
 router.delete('/:appId', checkAuth, AppController.app_delete);
 
 router.patch('/:appId', checkAuth, AppController.app_update);
 
 router.get('/:appId', checkAuth, AppController.get);
+
+router.get('/:appId/submissions', checkAuth, AppController.get_submissions);
+
+router.get('/:appId/users', checkAuth, AppController.get_users);
 
 module.exports = router;

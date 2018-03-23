@@ -14,8 +14,8 @@ mongoose.connect(process.env.DB_HOST)
 
 // middleware
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
+app.use(bodyParser.json({limit: '5mb'}));
 
 // cors
 app.use((req, res, next) => {
@@ -39,10 +39,12 @@ app.use((req, res, next) => {
 const userRoutes = require('./api/routes/user.routes');
 const mailRoutes = require('./api/routes/mail.routes');
 const appRoutes = require('./api/routes/app.routes');
+const submissionRoutes = require('./api/routes/submission.routes');
 
 app.use('/user', userRoutes);
 app.use('/mail', mailRoutes);
 app.use('/apps', appRoutes);
+app.use('/submissions', submissionRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Not found');
@@ -54,9 +56,7 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
-    error: {
-      message: error.message
-    }
+    message: error.message
   })
   console.log(error)
 });

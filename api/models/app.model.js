@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
-const relationship = require('mongoose-relationship');
 
 const appSchema = mongoose.Schema({
   _id: mongoose.Schema.ObjectId,
   name: {type: String, required: true},
   createdBy: {type: mongoose.Schema.ObjectId, ref: 'User'},
   createdAt: {type: Date, default: Date.now},
-  collaborators: [ {type: mongoose.Schema.ObjectId, ref: 'User', childPath: 'collaborating' }],
-  sharedWith: [{type: mongoose.Schema.ObjectId, ref: 'User', childPath: 'sharedWithMe'}],
   form: {
+    preview: {type: String},
     fields: [{
       _id: false,
       id: {type: String, required: true},
@@ -59,22 +57,23 @@ const appSchema = mongoose.Schema({
     states: [{
       _id: false,
       name: {type: String, required: true},
-      userAction: {type: Boolean, required: true},
+      adminAction: {type: Boolean, required: true, default: true},
+      userAction: {type: Boolean, required: true, default: false},
       actionName: {type: String, required: true},
       sendNotificationToCollaborators: {type: Boolean, required: true, default: true},
       requireApproval: {type: Boolean, required: true, default: true},
       sendAdditionalNotifications: {type: Boolean, required: true, default: true},
       sendNotificationToSubmitter: {type: Boolean, required: true, default: true},
       alsoNotify: [{type: String}],
-      approvers: [ {type: String}],
+      approvers: [ {type: mongoose.Schema.ObjectId }],
       minimumApprovals: {type: Number, default: 0},
       approvedState: {type: String},
       rejectedState: {type: String},
-      color: {type: String} 
+      color: {type: String},
+      userCanEdit: {type: Boolean, required: true, default: false},
+      adminCanEdit: {type: Boolean, required: true, default: true}
     }]
   }
 });
-
-appSchema.plugin(relationship, { relationshipPathName:['collaborators', 'sharedWith'] });
 
 module.exports = mongoose.model('App', appSchema);

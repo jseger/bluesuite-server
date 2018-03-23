@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.model');
+const Submission = require('../models/submission.model');
+const App = require('../models/app.model');
+const AppUser = require('../models/appUser.model');
 
 exports.user_signup = (req, res, next) => {
   User.find({email: req.body.email}).exec()
@@ -204,20 +207,6 @@ exports.update_user = (req, res, next) => {
   });
 };
 
-exports.my_data = (req, res, next) => {
-  const id = req.userData.userId;
-  User.findById(id).populate('collaborating')
-  .exec()
-  .then(user => {
-    res.status(200).json({
-      user: user
-    });
-  })
-  .catch(err => {
-    res.status(500).json({status: 500, data: null, message: err.message});
-  });
-};
-
 exports.search_by_email = (req, res, next) => {
   User.findOne({ email: req.body.email})
   .exec()
@@ -233,10 +222,87 @@ exports.search_by_email = (req, res, next) => {
           email: user.email,
           _id: user._id
         }
-      })
+      });
     }
   })
   .catch(err => {
     res.status(500).json({status: 500, data: null, message: err.message});
   })
+};
+
+exports.get_submissions = (req, res, next) => {
+  const userId = req.params.userId;
+  const appId = req.params.appId;
+  const requestedByUserId = req.userData.userId;
+  const page = req.params.page || 0;
+  const limit = req.params.limit || 100;
+
+  App.findById(appId)
+  .exec()
+  .then(app => {
+    if(app === null || app === undefined) {
+      res.status(404).json({
+        message: 'Not found.'
+      });
+      return;
+    }
+
+    if(app.createdBy.toString() === userId || app.collaborators.some(c => c.toString() === userId) || userId === requestedByUserId) {
+      Submission.find({$and:[
+        {"appId": {"$eq": appId}},
+        {"submittedBy": {"$eq": userId}}
+      ]})
+      .skip(page * limit).limit(limit)
+      .populate('submittedBy')
+      .then(submissions => {
+        res.status(200).json({
+          submissions: submissions
+        });
+        return;
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({message: err});
+      });
+    } else {
+      res.status(401).json({
+        message: 'You are not the creator or a collaborator of this app.'
+      });
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({message: err});
+  });
+};
+
+exports.get_forms = (req, res, next) => {
+  const id = req.userData.userId;
+  User.findById(id)
+  .populate('sharedWithMe')
+  .exec()
+  .then(user => {
+    res.status(200).json({
+      forms: user.sharedWithMe
+    });
+  })
+  .catch(err => {
+    res.status(500).json({status: 500, data: null, message: err.message});
+  });
+};
+
+exports.get_apps = (req, res, next) => {
+  const userId = req.userData.userId || req.params.userId;
+  console.log(userId)
+  AppUser.find({user: userId})
+  .populate('app')
+  .populate('user')
+  .exec()
+  .then(apps => {
+    console.log(apps)
+    res.status(200).json(apps);
+  })
+  .catch(err => {
+    res.status(500).json({status: 500, data: null, message: err.message});
+  });
 };

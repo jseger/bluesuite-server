@@ -15,8 +15,14 @@ router.post('/refreshToken', checkAuth, UserController.user_refresh_token);
 
 router.post('/changePassword', checkAuth, UserController.user_change_password);
 
-router.get('/me', checkAuth, UserController.my_data);
-
 router.post('/search', checkAuth, UserController.search_by_email);
+
+router.get('/:userId/submissions/:appId', checkAuth, UserController.get_submissions);
+
+router.get('/forms', checkAuth, UserController.get_forms);
+
+router.get('/apps', checkAuth, UserController.get_apps);
+
+router.get('/:userId/apps', checkAuth, UserController.get_apps);
 
 module.exports = router;
